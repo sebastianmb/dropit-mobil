@@ -14,12 +14,25 @@ const Map = () => {
 
     useEffect(() => {
         if (!origin || !destination) return;
-
-        //Zoom & Fit to markers
-        mapRef.current.fitToSuppliedMarkers(["origin","destination"], {
-            edgePadding: { top: 50, right: 50, bottom: 50, left: 50 },
-        });
-    }, [origin, destination]);
+    
+        // Calcula la región que abarca ambos puntos
+        const minLat = Math.min(origin.location.lat, destination.location.lat);
+        const maxLat = Math.max(origin.location.lat, destination.location.lat);
+        const minLng = Math.min(origin.location.lng, destination.location.lng);
+        const maxLng = Math.max(origin.location.lng, destination.location.lng);
+    
+        const region = {
+            latitude: (minLat + maxLat) / 2,
+            longitude: (minLng + maxLng) / 2,
+            latitudeDelta: Math.abs(maxLat - minLat) * 1.2, // Ajusta el factor según tus preferencias
+            longitudeDelta: Math.abs(maxLng - minLng) * 1.2,
+        };
+    
+        // Establece la región en el mapa
+        if (mapRef.current) {
+            mapRef.current.animateToRegion(region, 1000); // Ajusta la duración según lo deseado
+        }
+    }, [destination]); // Solo se ejecutará cuando cambie el destino
 
     return (
         <MapView
