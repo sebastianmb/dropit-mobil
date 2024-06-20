@@ -34,6 +34,16 @@ const Map = () => {
         }
     }, [destination]); // Solo se ejecutará cuando cambie el destino
 
+    useEffect(()=>{
+        if(!origin || !destination) return;
+        const getTravelTime= async()=>{
+            fetch(`https://maps.googleapis.com/maps/api/distancematrix/json?destinations=${destination.description}&origins=${origin.description}&units=imperial&key=${GOOGLE_MAPS_APIKEY}`).then((res)=>res.json()).then(data=>{
+                console.log(data)
+            });
+        };
+        getTravelTime();
+    },[origin, destination, GOOGLE_MAPS_APIKEY])
+
     return (
         <MapView
             ref={mapRef}
