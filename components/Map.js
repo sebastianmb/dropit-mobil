@@ -20,7 +20,9 @@ const Map = () => {
     const dispatch = useDispatch();
     const travelTimeInformation = useSelector(selectTravelTimeInformation);
 
-    const [userLocation, setUserLocation] = useState(null);
+    // Declaración de estado local
+   
+    const [userLocation, setUserLocation] = useState();
 
     useEffect(() => {
         if (!origin || !destination) return;
@@ -72,15 +74,17 @@ const Map = () => {
                     Location.watchPositionAsync(
                         {
                             accuracy: Location.Accuracy.High,
+                            distanceInterval: 1,
                             timeInterval: 5000, // Actualiza cada 5 segundos (ajusta según tus necesidades)
                         },
                         (location) => {
                             const { latitude, longitude } = location.coords;
                             setUserLocation({ latitude, longitude });
-
                             
+
+
                             // Imprime la ubicación del usuario en la consola
-                            console.log('Ubicación actualizada:', userLocation);
+                            //console.log('Ubicación actualizada:', userLocation);
                         }
                     );
                 } else {
@@ -152,6 +156,7 @@ const Map = () => {
                     }}
                     title="Mi ubicaciòn"
                     description="Aquì estoy"
+                    pinColor="blue" // Cambia el color del marcador a azul
 
                 />
             )}
