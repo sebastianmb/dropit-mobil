@@ -7,6 +7,7 @@ import { selectDestination, selectOrigin, selectTravelTimeInformation, setTravel
 import MapViewDirections from 'react-native-maps-directions';
 import { GOOGLE_MAPS_APIKEY } from "@env"
 
+import { Icon } from '@rneui/themed';
 
 import * as Location from 'expo-location'; // Importa expo-location
 
@@ -21,7 +22,7 @@ const Map = () => {
     const travelTimeInformation = useSelector(selectTravelTimeInformation);
 
     // Declaración de estado local
-   
+
     const [userLocation, setUserLocation] = useState();
 
     useEffect(() => {
@@ -80,7 +81,7 @@ const Map = () => {
                         (location) => {
                             const { latitude, longitude } = location.coords;
                             setUserLocation({ latitude, longitude });
-                            
+
 
 
                             // Imprime la ubicación del usuario en la consola
@@ -156,9 +157,13 @@ const Map = () => {
                     }}
                     title="Mi ubicaciòn"
                     description="Aquì estoy"
-                    pinColor="blue" // Cambia el color del marcador a azul
 
-                />
+
+                >
+                    <Icon
+                        name='motorcycle'
+                        color='#00aced' />
+                </Marker>
             )}
         </MapView>
     );
