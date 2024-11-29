@@ -10,15 +10,17 @@ import { selectOrigin } from '../slices/navSlice';
 const data=[
     {
         id:"123",
-        title:"Get a ride",
+        title:"Pedir servicio",
         Image:"https://www.uber-assets.com/image/upload/f_auto,q_auto:eco,c_fill,w_485,h_385/f_auto,q_auto/products/carousel/UberX.png",
-        screen:"MapScreen"
+        screen:"MapScreen",
+        type:"service"
     },
     {
         id:"456",
-        title:"Order food",
+        title:"Entregas",
         Image:"https://i.pinimg.com/originals/4f/eb/74/4feb745209cf7aba57463b20d27b61e3.png",
-        screen:"EatScreen"
+        screen:"MapScreen",
+        type:"delivery"
     }
 ];
 const NavOptions = () => {
@@ -32,7 +34,7 @@ const NavOptions = () => {
          keyExtractor={(item)=>item.id}
          renderItem={({item})=>(
             <TouchableOpacity 
-                onPress={()=>navigation.navigate(item.screen)}
+                onPress={()=>navigation.navigate(item.screen,{type:item.type}   )}
                 style={tw`p-2 pl-6 pb-8 pt-4 bg-gray-200 m-2 w-40`}
                 disabled={!origin} 
                 >

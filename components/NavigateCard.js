@@ -8,6 +8,7 @@ import { setDestination } from "../slices/navSlice";
 import { useNavigation } from "@react-navigation/native";
 import NavFavorites from "./NavFavorites";
 import { Icon } from "@rneui/base";
+import PendingOrders from "./PendingOrders";
 
 
 
@@ -44,6 +45,7 @@ const NavigateCard = () => {
                         debounce={400}
                     />
                 </View>
+                
                 <NavFavorites/>
             </View>
 

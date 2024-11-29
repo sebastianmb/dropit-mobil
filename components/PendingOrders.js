@@ -1,6 +1,6 @@
 import React from 'react';
 import { FlatList, Text, View, TouchableOpacity } from 'react-native';
-import tw from 'tailwind-react-native-classnames';
+import tw from "twrnc"
 
 const PendingOrders = () => {
     // Datos simulados

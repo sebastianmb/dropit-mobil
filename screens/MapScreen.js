@@ -7,7 +7,8 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import RideOptionsCard from '../components/RideOptionsCard';
 import NavigateCard from '../components/NavigateCard';
 import { Icon } from '@rneui/base';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import PendingOrders from '../components/PendingOrders';
 
 
 
@@ -15,6 +16,10 @@ const MapScreen = () => {
 
     const Stack = createNativeStackNavigator();
     const navigation=useNavigation();
+    const route=useRoute()
+
+    // Recibe el parámetro "type" para determinar el contexto (Pedir Servicio o Entregas)
+    const { type } = route.params || {}; // Puede ser "service" o "delivery"
     return (
         <View>
             
@@ -30,6 +35,7 @@ const MapScreen = () => {
             </View>
             <View style={tw`h-1/2`}>
                 <Stack.Navigator>
+                {type === "service" && (
                     <Stack.Screen
                         name="NavigateCard"
                         component={NavigateCard}
@@ -37,6 +43,8 @@ const MapScreen = () => {
                             headerShown: false,
                         }}
                     />
+                )}
+                    {type === "service" && (
                     <Stack.Screen
                         name="RideOptionsCard"
                         component={RideOptionsCard}
@@ -44,6 +52,17 @@ const MapScreen = () => {
                             headerShown: false,
                         }}
                     />
+                    )}
+                    {type === "delivery" && (
+                    <Stack.Screen
+                        name="PendingOrders"
+                        component={PendingOrders}
+                        options={{
+                            headerShown: false,
+                        }}
+                    />
+                    )}
+                    
 
                 </Stack.Navigator>
             </View>
