@@ -36,10 +36,10 @@ const NavOptions = () => {
             <TouchableOpacity 
                 onPress={()=>navigation.navigate(item.screen,{type:item.type}   )}
                 style={tw`p-2 pl-6 pb-8 pt-4 bg-gray-200 m-2 w-40`}
-                disabled={!origin} 
+                disabled={item.type === "service" && !origin} // Solo deshabilita "Pedir servicio" si no hay origin 
                 >
                   
-                <View style={tw`${!origin && "opacity-20"}`}>
+                <View style={tw`${item.type === "service" && !origin ? "opacity-20" : ""}`}>
                     <Image
                       style= {{width:120, height:120,resizeMode:"contain"}}
                       source={{uri:item.Image}}
