@@ -19,7 +19,7 @@ const data=[
         id:"456",
         title:"Entregas",
         Image:"https://i.pinimg.com/originals/4f/eb/74/4feb745209cf7aba57463b20d27b61e3.png",
-        screen:"MapScreen",
+        screen:"MapScreenDeliver",
         type:"delivery"
     }
 ];

@@ -7,6 +7,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import MapScreen from './screens/MapScreen';
+import MapScreenDeliver from './screens/MapScreenDeliver';
 
 export default function App() {
 
@@ -28,6 +29,13 @@ export default function App() {
               <Stack.Screen
                 name='MapScreen'
                 component={MapScreen}
+                options={{
+                  headerShown: false,
+                }}
+              />
+              <Stack.Screen
+                name='MapScreenDeliver'
+                component={MapScreenDeliver}
                 options={{
                   headerShown: false,
                 }}
