@@ -9,6 +9,7 @@ import NavigateCard from '../components/NavigateCard';
 import { Icon } from '@rneui/base';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import PendingOrders from '../components/PendingOrders';
+import MapDeliver from '../components/MapDeliver';
 
 
 
@@ -31,7 +32,7 @@ const MapScreenDeliver = () => {
             </TouchableOpacity>
 
             <View style={tw`h-1/2`}>
-                <Map />
+                <MapDeliver />
             </View>
             <View style={tw`h-1/2`}>
                 <Stack.Navigator>
