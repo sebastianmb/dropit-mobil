@@ -9,7 +9,7 @@ const PendingOrders = () => {
 
     const fetchOrders = async () => {
         try {
-            const response = await fetch(`http://192.168.1.100:3001/api/orders/all-orders`, {
+            const response = await fetch(`http://192.168.1.69:3001/api/orders/all-orders`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
