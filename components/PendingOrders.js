@@ -6,14 +6,19 @@ import tw from "twrnc";
 const PendingOrders = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
+    useEffect(() => {
+        
+        fetchOrders();
+    }, []);
 
     const fetchOrders = async () => {
         try {
-            const response = await fetch(`http://192.168.1.69:3001/api/orders/all-orders`, {
+            
+            const response = await fetch(`${API_URL}/all-orders`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",
-                    "Authorization": `Bearer abc123-secure-token-xyz789`,
+                    "Authorization": `Bearer ${API_TOKEN}`,
                 },
             });
 
@@ -23,6 +28,32 @@ const PendingOrders = () => {
 
             const data = await response.json();
             setOrders(data);
+            // Log the origin, waypoints, and destination for each order
+            data.forEach(order => {
+                if (order.pickupLocation) {
+                    console.log("Origen:", order.pickupLocation.name);
+                    console.log("Coordenadas de origen:", order.pickupLocation.lat, order.pickupLocation.lng);
+                } else {
+                    console.log("Origen: No disponible");
+                }
+
+                if (order.waypoints && order.waypoints.length > 0) {
+                    console.log("Waypoints:");
+                    order.waypoints.forEach((waypoint, index) => {
+                        console.log(`  Waypoint ${index + 1}: ${waypoint.name}`);
+                        console.log(`  Coordenadas del waypoint ${index + 1}:`, waypoint.lat, waypoint.lng);
+                    });
+                } else {
+                    console.log("Waypoints: No disponibles");
+                }
+
+                if (order.deliveryDestination) {
+                    console.log("Destino:", order.deliveryDestination.name);
+                    console.log("Coordenadas de destino:", order.deliveryDestination.lat, order.deliveryDestination.lng);
+                } else {
+                    console.log("Destino: No disponible");
+                }
+            });
         } catch (error) {
             console.error("Error fetching orders:", error);
         } finally {
