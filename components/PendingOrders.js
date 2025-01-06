@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { FlatList, Text, View, TouchableOpacity } from 'react-native';
+import { useDispatch } from 'react-redux';
 import { API_URL, API_TOKEN } from '@env';
+import { setOrigin, setDestination, setWaypoints } from '../slices/navSlice';
 import tw from "twrnc";
 
 const PendingOrders = () => {
     const [orders, setOrders] = useState([]);
     const [loading, setLoading] = useState(true);
+    const dispatch = useDispatch();
+
     useEffect(() => {
         
         fetchOrders();
@@ -28,32 +32,7 @@ const PendingOrders = () => {
 
             const data = await response.json();
             setOrders(data);
-            // Log the origin, waypoints, and destination for each order
-            data.forEach(order => {
-                if (order.pickupLocation) {
-                    console.log("Origen:", order.pickupLocation.name);
-                    console.log("Coordenadas de origen:", order.pickupLocation.lat, order.pickupLocation.lng);
-                } else {
-                    console.log("Origen: No disponible");
-                }
-
-                if (order.waypoints && order.waypoints.length > 0) {
-                    console.log("Waypoints:");
-                    order.waypoints.forEach((waypoint, index) => {
-                        console.log(`  Waypoint ${index + 1}: ${waypoint.name}`);
-                        console.log(`  Coordenadas del waypoint ${index + 1}:`, waypoint.lat, waypoint.lng);
-                    });
-                } else {
-                    console.log("Waypoints: No disponibles");
-                }
-
-                if (order.deliveryDestination) {
-                    console.log("Destino:", order.deliveryDestination.name);
-                    console.log("Coordenadas de destino:", order.deliveryDestination.lat, order.deliveryDestination.lng);
-                } else {
-                    console.log("Destino: No disponible");
-                }
-            });
+            
         } catch (error) {
             console.error("Error fetching orders:", error);
         } finally {
@@ -74,9 +53,17 @@ const PendingOrders = () => {
             if (!response.ok) {
                 throw new Error("Error accepting order");
             }
+            // Encuentra el pedido aceptado
+            const acceptedOrder = orders.find(order => order._id === orderId);
 
+            // Guarda la información en el estado global
+            if (acceptedOrder) {
+                dispatch(setOrigin(acceptedOrder.pickupLocation));
+                dispatch(setDestination(acceptedOrder.deliveryDestination));
+                dispatch(setWaypoints(acceptedOrder.waypoints));
+            }
             // Actualizar la lista de órdenes tras aceptar
-            Alert.alert("Orden aceptada", `La orden con ID ${orderId} ha sido aceptada.`);
+            //Alert.alert("Orden aceptada", `La orden con ID ${orderId} ha sido aceptada.`);
             fetchOrders(); // Refresca la lista de pedidos
         } catch (error) {
             console.error("Error accepting order:", error);

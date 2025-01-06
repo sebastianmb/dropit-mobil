@@ -3,7 +3,7 @@ import { StyleSheet, Text, View } from "react-native";
 import MapView, { Marker } from "react-native-maps";
 import { useDispatch, useSelector } from "react-redux";
 import tw from "twrnc"
-import { selectDestination, selectOrigin, selectTravelTimeInformation, setTravelTimeInformation } from "../slices/navSlice";
+import { selectDestination, selectOrigin, selectTravelTimeInformation, setTravelTimeInformation, selectWaypoints } from "../slices/navSlice";
 import MapViewDirections from 'react-native-maps-directions';
 import { GOOGLE_MAPS_APIKEY } from "@env"
 
@@ -26,13 +26,13 @@ const MapDeliver = () => {
     const [userLocation, setUserLocation] = useState();
 
     useEffect(() => {
-        if (!origin || !destination|| !userLocation) return;
+        if (!origin || !destination || !userLocation) return;
 
         // Calcula la región que abarca ambos puntos
-        const minLat = Math.min(origin.location.lat, destination.location.lat, userLocation.latitude);
-        const maxLat = Math.max(origin.location.lat, destination.location.lat, userLocation.latitude);
-        const minLng = Math.min(origin.location.lng, destination.location.lng, userLocation.longitude);
-        const maxLng = Math.max(origin.location.lng, destination.location.lng, userLocation.longitude);
+        const minLat = Math.min(origin.lat, destination.lat, userLocation.latitude);
+        const maxLat = Math.max(origin.lat, destination.lat, userLocation.latitude);
+        const minLng = Math.min(origin.lng, destination.lng, userLocation.longitude);
+        const maxLng = Math.max(origin.lng, destination.lng, userLocation.longitude);
 
         const region = {
             latitude: (minLat + maxLat) / 2,
@@ -116,39 +116,45 @@ const MapDeliver = () => {
         >
             {origin && destination && (
                 <MapViewDirections
-                    origin={origin.description}
-                    destination={destination.description}
+                    origin={{
+                        latitude: origin.lat,
+                        longitude: origin.lng,
+                    }}
+                    destination={{
+                        latitude: destination.lat,
+                        longitude: destination.lng,
+                    }}
                     apikey={GOOGLE_MAPS_APIKEY}
                     strokeWidth={3}
                     strokeColor="black"
 
                 />
             )}
-            {origin?.location && (
+            {origin?.lat && (
                 <Marker
                     coordinate={{
-                        latitude: origin.location.lat,
-                        longitude: origin.location.lng,
+                        latitude: origin.lat,
+                        longitude: origin.lng,
                     }}
                     title="Origin"
-                    description={origin.description}
+                    description={origin.name}
                     identifier="origin"
                 />
             )}
 
-            {destination?.location && (
+            {destination?.lat && (
                 <Marker
                     coordinate={{
-                        latitude: destination.location.lat,
-                        longitude: destination.location.lng,
+                        latitude: destination.lat,
+                        longitude: destination.lng,
                     }}
                     title="Destination"
-                    description={destination.description}
+                    description={destination.name}
                     identifier="destination"
                 />
             )}
 
-            {userLocation && (
+            {userLocation?.latitude && (
 
                 <Marker
                     coordinate={{
@@ -161,8 +167,9 @@ const MapDeliver = () => {
 
                 >
                     <Icon
-                        name='motorcycle'
-                        color='#00aced' />
+                        name='motorcycle' // Cambia el ícono a uno relacionado con un repartidor
+                        color='#00aced'
+                        size={30} />
                 </Marker>
             )}
         </MapView>
