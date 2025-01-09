@@ -3,11 +3,13 @@ import { FlatList, Text, View, TouchableOpacity } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { API_URL, API_TOKEN } from '@env';
 import { setOrigin, setDestination, setWaypoints } from '../slices/navSlice';
-
+import DeliveryButton from './DeliveryButton';
+import * as Location from 'expo-location';
+import io from 'socket.io-client';
 
 import tw from "twrnc";
-import DeliveryButton from './DeliveryButton';
 
+const socket = io(API_URL);
 
 const PendingOrders = () => {
     const [orders, setOrders] = useState([]);
@@ -77,9 +79,36 @@ const PendingOrders = () => {
         }
     };
 
-    const startDelivery = (orderId) => {
-        // Aquí puedes agregar la lógica para rastrear la posición del repartidor
-        console.log(`Iniciando entrega para la orden con ID ${orderId}`);
+    const startDelivery = async (orderId) => {
+        try {
+            const location = await Location.getCurrentPositionAsync({});
+            socket.emit('updateLocation', {
+                orderId,
+                latitude: location.coords.latitude,
+                longitude: location.coords.longitude,
+            });
+
+            console.log(`Iniciando entrega para la orden con ID ${orderId}`);
+
+            // Iniciar el seguimiento en tiempo real
+            Location.watchPositionAsync(
+                {
+                    accuracy: Location.Accuracy.High,
+                    timeInterval: 5000, // Actualiza cada 5 segundos
+                    distanceInterval: 10, // Actualiza cada 10 metros
+                },
+                (newLocation) => {
+                    socket.emit('updateLocation', {
+                        orderId,
+                        latitude: newLocation.coords.latitude,
+                        longitude: newLocation.coords.longitude,
+                    });
+                }
+            );
+        } catch (error) {
+            console.error("Error starting delivery:", error);
+            Alert.alert("Error", "No se pudo iniciar la entrega. Intenta nuevamente.");
+        }
     };
     useEffect(() => {
         fetchOrders();
@@ -110,7 +139,7 @@ const PendingOrders = () => {
                 </TouchableOpacity>
             )}
 
-            
+
         </View>
 
     );
